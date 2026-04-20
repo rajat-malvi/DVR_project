@@ -1,0 +1,62 @@
+services:
+
+  router_a:
+    build: .
+    container_name: router_a
+    privileged: true
+    environment:
+      ROUTER_ID: router_a
+      MY_IP: "10.0.1.2"
+      NEIGHBORS: "10.0.1.3,10.0.3.3"
+    networks:
+      net_ab:
+        ipv4_address: 10.0.1.2
+      net_ac:
+        ipv4_address: 10.0.3.2
+
+  router_b:
+    build: .
+    container_name: router_b
+    privileged: true
+    environment:
+      ROUTER_ID: router_b
+      MY_IP: "10.0.2.2"
+      NEIGHBORS: "10.0.1.2,10.0.2.3"
+    networks:
+      net_ab:
+        ipv4_address: 10.0.1.3
+      net_bc:
+        ipv4_address: 10.0.2.2
+
+  router_c:
+    build: .
+    container_name: router_c
+    privileged: true
+    environment:
+      ROUTER_ID: router_c
+      MY_IP: "10.0.3.3"
+      NEIGHBORS: "10.0.2.2,10.0.3.2"
+    networks:
+      net_bc:
+        ipv4_address: 10.0.2.3
+      net_ac:
+        ipv4_address: 10.0.3.3
+
+networks:
+  net_ab:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.1.0/24
+
+  net_bc:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.2.0/24
+
+  net_ac:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.3.0/24
